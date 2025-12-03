@@ -1,13 +1,12 @@
 // hooks/useCartActions.ts
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../store/hooks';
+import type { AppDispatch, RootState } from '../store'; 
 import { addItem, fetchCart } from '../store/slices/cartSlice';
-import { useAuth } from './useAuth'; // Assuming you have an auth hook
 
 export const useCartActions = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { user } = useAuth(); // Get current user
+  const user = useSelector((state: RootState) => state.auth.user); // Get user directly
   const { loading } = useSelector((state: RootState) => state.cart);
 
   const addToCart = useCallback(async (productId: string, quantity: number = 1) => {
@@ -23,7 +22,6 @@ export const useCartActions = () => {
         quantity 
       })).unwrap();
       
-      // Refresh cart data
       await dispatch(fetchCart({ userId: user.id }));
     } catch (error) {
       console.error('Failed to add to cart:', error);

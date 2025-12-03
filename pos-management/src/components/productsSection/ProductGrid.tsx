@@ -166,21 +166,16 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   }, [handleLoadMore, hasMore]);
 
   // Display loading state
- if ((loading && isInitialLoad) || (sourceProducts.length === 0 && loading)) {
-  return (
-    <div className="flex items-center  w-full min-h-screen sm:min-h-[400px]">
-      <div className="flex flex-col items-center justify-center">
-        <Spinner 
-          color="border-blue-600" 
-          borderWidth={3} 
-        />
-        <p className="mt-4 text-gray-600 text-sm sm:text-base">
-          Loading products...
-        </p>
+  if ((loading && isInitialLoad) || (sourceProducts.length === 0 && loading)) {
+    return (
+      <div className="w-[75%] bg-white min-h-[600px] flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
+          <Spinner color="border-blue-600" borderWidth={3} />
+          <p className="mt-4 text-gray-600 text-base">Loading products...</p>
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   // Display error state
   if (error && sourceProducts.length === 0) {
@@ -207,7 +202,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     <div className="w-[75%] bg-white p-4 overflow-y-auto relative">
       <div className="rounded-lg">
         <div className="flex items-center justify-between">
-
           {loading && (
             <span className="flex items-center text-sm text-blue-600">
               <Spinner size={14} color="border-blue-600" />
@@ -219,7 +213,6 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
         {/* Debug info */}
         <div className="mt-2 text-xs text-gray-600">
           <div className="grid grid-cols-3 gap-2">
-            <div>{categoryBucketSlug}</div>
             <div>{hasMore ? "" : ""}</div>
             <div> {isCurrentCategoryLoadingMore ? "" : ""}</div>
           </div>
