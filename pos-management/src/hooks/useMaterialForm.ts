@@ -61,19 +61,29 @@ export const useMaterialForm = (initialData?: Partial<MaterialFormData>) => {
       itemHsn: formData.itemHsn || undefined,
       itemCode: formData.itemCode || undefined,
       barcode: formData.barcode || undefined,
-      purchaseRate: formData.purchaseRate ? parseFloat(formData.purchaseRate) : 0,
+      purchaseRate: formData.purchaseRate
+        ? parseFloat(formData.purchaseRate)
+        : 0,
       retailRate: parseFloat(formData.retailRate) || 0,
-      wholesaleRate: formData.wholesaleRate ? parseFloat(formData.wholesaleRate) : 0,
+      wholesaleRate: formData.wholesaleRate
+        ? parseFloat(formData.wholesaleRate)
+        : 0,
       unitPrimary: formData.unitPrimary,
       unitSecondary: formData.unitSecondary || undefined,
       conversionFactor: parseFloat(formData.conversionFactor) || 1,
-      discountAmount: formData.discountAmount ? parseFloat(formData.discountAmount) : 0,
+      discountAmount: formData.discountAmount
+        ? parseFloat(formData.discountAmount)
+        : 0,
       discountType: formData.discountType,
       warehouse: formData.warehouse || undefined,
-      taxPercentage: formData.taxPercentage ? parseFloat(formData.taxPercentage) : 0,
+      taxPercentage: formData.taxPercentage
+        ? parseFloat(formData.taxPercentage)
+        : 0,
       batchEnabled: formData.batchEnabled,
       serialNumberEnabled: formData.serialNumberEnabled,
-      stock: formData.enabledOpeningStock ? parseInt(formData.openingStockQuantity) || 0 : 0,
+      stock: formData.enabledOpeningStock
+        ? parseInt(formData.openingStockQuantity) || 0
+        : 0,
       category: formData.category,
       purchaseTax: formData.purchaseTax,
       retailTax: formData.retailTax,

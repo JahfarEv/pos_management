@@ -1,65 +1,63 @@
-// components/common/ThreeDotsLoader.tsx
 import React from "react";
 
 interface ThreeDotsLoaderProps {
-  color?: string; // Color class for the dots
-  size?: "sm" | "md" | "lg"; // Size variants
+  color?: string;
+  size?: "sm" | "md" | "lg";
 }
 
 export const ThreeDotsLoader: React.FC<ThreeDotsLoaderProps> = ({
   color = "bg-yellow-500",
-  size = "md"
+  size = "md",
 }) => {
   const sizeClasses = {
     sm: "w-1.5 h-1.5 mx-0.5",
     md: "w-2 h-2 mx-0.5",
-    lg: "w-3 h-3 mx-1"
+    lg: "w-3 h-3 mx-1",
   };
 
   return (
     <div className="flex items-center justify-center">
-      <div 
+      <div
         className={`${sizeClasses[size]} ${color} rounded-full animate-pulse`}
-        style={{ animationDelay: '0ms' }}
+        style={{ animationDelay: "0ms" }}
       />
-      <div 
+      <div
         className={`${sizeClasses[size]} ${color} rounded-full animate-pulse`}
-        style={{ animationDelay: '150ms' }}
+        style={{ animationDelay: "150ms" }}
       />
-      <div 
+      <div
         className={`${sizeClasses[size]} ${color} rounded-full animate-pulse`}
-        style={{ animationDelay: '300ms' }}
+        style={{ animationDelay: "300ms" }}
       />
     </div>
   );
 };
 
-// Alternative with keyframes for more control
 export const ThreeDotsLoaderAlt: React.FC<ThreeDotsLoaderProps> = ({
   color = "bg-yellow-500",
-  size = "md"
+  size = "md",
 }) => {
   const sizeClasses = {
     sm: "w-1.5 h-1.5",
     md: "w-2 h-2",
-    lg: "w-3 h-3"
+    lg: "w-3 h-3",
   };
 
   return (
     <div className="flex items-center space-x-1">
       <span className="sr-only">Loading...</span>
       <div className="flex items-center space-x-1">
-        <div 
+        <div
           className={`${sizeClasses[size]} ${color} rounded-full animate-bounce`}
-          style={{ animationDelay: '0ms', animationDuration: '1.4s' }}
+          style={{ animationDelay: "0ms", animationDuration: "1.4s" }}
         />
-        <div 
+        <div
           className={`${sizeClasses[size]} ${color} rounded-full animate-bounce`}
-          style={{ animationDelay: '200ms', animationDuration: '1.4s' }}
+          style={{ animationDelay: "200ms", animationDuration: "1.4s" }}
         />
-        <div 
+        <div
           className={`${sizeClasses[size]} ${color} rounded-full animate-bounce`}
-          style={{ animationDelay: '400ms', animationDuration: '1.4s' }}
+          style={{ animationDelay: "400ms", animationDuration: "1.4s" }}
         />
       </div>
     </div>

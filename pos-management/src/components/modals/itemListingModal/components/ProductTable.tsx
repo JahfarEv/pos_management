@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { MoreVertical } from "lucide-react";
 import { toast } from "react-toastify";
 import { useAppDispatch } from "../../../../store/hooks";
-import { deleteProduct, fetchProducts } from "../../../../store/slices/productsSlice";
+import {
+  deleteProduct,
+  fetchProducts,
+} from "../../../../store/slices/productsSlice";
 import { ProductActions } from "./ProductActions";
 import type { Product } from "../../../../store/slices/productsSlice";
 

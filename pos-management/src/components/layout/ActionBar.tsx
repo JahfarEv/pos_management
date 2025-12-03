@@ -219,7 +219,6 @@ export const ActionBar: React.FC<ActionBarProps> = ({
     );
   };
 
-  // Prev / Next navigation: only inform user (no selection mutation here because no setter provided)
   const handlePrev = () => {
     if (cart.length === 0) {
       toast.info("Cart is empty", {

@@ -1,5 +1,4 @@
-// hooks/useToast.ts
-import { toast } from 'sonner';
+import { toast } from "sonner";
 
 export const useToast = () => {
   const showSuccess = (message: string) => {
@@ -10,22 +9,21 @@ export const useToast = () => {
 
   const showError = (message: string) => {
     // Check for specific error patterns
-    if (message.includes('out of stock')) {
+    if (message.includes("out of stock")) {
       toast.error(message, {
         duration: 5000,
-        icon: '⚠️',
+        icon: "⚠️",
         action: {
-          label: 'View Stock',
+          label: "View Stock",
           onClick: () => {
-            // Navigate to stock page or open stock modal
-            console.log('View stock clicked');
+            console.log("View stock clicked");
           },
         },
       });
-    } else if (message.includes('stock')) {
+    } else if (message.includes("stock")) {
       toast.error(message, {
         duration: 4000,
-        icon: '📦',
+        icon: "📦",
       });
     } else {
       toast.error(message, {

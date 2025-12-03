@@ -31,7 +31,7 @@ export const CategoryPanel: React.FC<CategoryPanelProps> = ({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastScrollTimeRef = useRef<number>(0);
-  const isLoadingRef = useRef(false); 
+  const isLoadingRef = useRef(false);
 
   const showSpinnerBeforeApiCall = useCallback(() => {
     setShowInfiniteScrollSpinner(true);
@@ -115,7 +115,7 @@ export const CategoryPanel: React.FC<CategoryPanelProps> = ({
 
   const handleScroll = useCallback(() => {
     const now = Date.now();
-    const scrollDelay = 500; 
+    const scrollDelay = 500;
 
     if (now - lastScrollTimeRef.current < scrollDelay) {
       return;
@@ -280,16 +280,9 @@ export const CategoryPanel: React.FC<CategoryPanelProps> = ({
             <div className="flex items-center justify-center mb-2">
               <Spinner size={28} color="border-blue-600" borderWidth={3} />
             </div>
-            {/* <div className="text-sm text-gray-600 font-medium">
-              Loading more categories...
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              Please wait while we fetch more categories
-            </div> */}
           </div>
         )}
 
-        {/* Load More Trigger - Only show when there are more categories AND not loading */}
         {hasMoreCategories() && !showInfiniteScrollSpinner && !loadingMore && (
           <div
             ref={loadMoreTriggerRef}

@@ -58,17 +58,16 @@ const handleSubmit = async (e: React.FormEvent) => {
       throw new Error("Passwords do not match");
     }
 
-    // Call registration API - FIXED HERE
+    // Call registration API
     const result = await register({
       name: name.trim(),
-      mobile: mobileNumber, // Changed from mobileNumber to mobile
+      mobile: mobileNumber, 
       password,
     });
 
     console.log("Registration successful:", result);
     setSuccess("Registration successful! You can now login with your credentials.");
     
-    // Optionally auto-login or redirect to login after a delay
     setTimeout(() => {
       navigate("/login");
     }, 2000);

@@ -3,7 +3,11 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
+export const authenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const authHeader = req.headers.authorization;
     let token: string | undefined;
@@ -22,7 +26,7 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
       role?: string;
     };
 
-    req.user = decoded; 
+    (req as any).user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Unauthorized: Invalid token" });

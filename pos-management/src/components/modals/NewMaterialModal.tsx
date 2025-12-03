@@ -171,7 +171,6 @@ export const NewMaterialModal: React.FC = () => {
             />
           </div>
 
-          {/* Footer - Pass individual props instead of grouped objects */}
           <MaterialFormFooter
             formData={formData}
             isSubmitting={isSubmitting}

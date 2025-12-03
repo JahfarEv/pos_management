@@ -128,7 +128,6 @@ export const MaterialFormFooter: React.FC<MaterialFormFooterProps> = ({
     if (!exists) {
       addCategoryLocal(name);
       try {
-        // Use safeAwait helper to handle both Redux thunks and regular promises
         await safeAwait(createCategoryOnServer(name));
       } catch (e) {
         console.error("Failed to persist category:", e);
@@ -177,7 +176,6 @@ export const MaterialFormFooter: React.FC<MaterialFormFooterProps> = ({
         );
       }
 
-      // Use safeAwait for createProduct
       await safeAwait(createProduct(payload));
 
       setFormData({

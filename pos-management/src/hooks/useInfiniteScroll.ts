@@ -1,12 +1,11 @@
-// hooks/useInfiniteScroll.ts
 import { useEffect, useRef, useCallback, useState } from 'react';
 
 interface UseInfiniteScrollProps {
   loading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  threshold?: number; // pixels from bottom to trigger load
-  delay?: number; // delay between loads
+  threshold?: number; 
+  delay?: number; 
 }
 
 export const useInfiniteScroll = ({
@@ -36,14 +35,12 @@ export const useInfiniteScroll = ({
     }
   }, [hasMore, loading, onLoadMore, delay, isLoadingMore]);
 
-  // Reset loading more state when loading completes
   useEffect(() => {
     if (!loading) {
       setIsLoadingMore(false);
     }
   }, [loading]);
 
-  // Setup Intersection Observer
   useEffect(() => {
     if (!hasMore || loading) return;
 

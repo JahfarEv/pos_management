@@ -1,13 +1,14 @@
-// components/providers/CartInitializer.tsx
-import React, { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { fetchCart } from '../store/slices/cartSlice';
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { fetchCart } from "../store/slices/cartSlice";
 
 interface CartInitializerProps {
   children: React.ReactNode;
 }
 
-export const CartInitializer: React.FC<CartInitializerProps> = ({ children }) => {
+export const CartInitializer: React.FC<CartInitializerProps> = ({
+  children,
+}) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
 
@@ -17,7 +18,7 @@ export const CartInitializer: React.FC<CartInitializerProps> = ({ children }) =>
         try {
           await dispatch(fetchCart({ userId: user._id })).unwrap();
         } catch (error) {
-          console.error('Failed to initialize cart:', error);
+          console.error("Failed to initialize cart:", error);
         }
       }
     };
