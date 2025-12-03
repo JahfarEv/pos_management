@@ -34,10 +34,10 @@ export const Header: React.FC<HeaderProps> = ({ onLogout }) => {
   return (
     <header className="bg-blue-800 text-white flex justify-between items-center shadow-md z-10 relative py-1 h-12">
       <div className="font-bold text-lg w-[35.1%] text-center">Sales</div>
-      <div className="font-bold text-lg w-[20.8%] text-center border-l border-gray-500">
+      <div className="font-bold text-lg w-[22.8%] text-center border-l border-gray-500">
         Item Category
       </div>
-      <div className="font-bold text-lg w-[37.5%] text-center border-l border-gray-500">
+      <div className="font-bold text-lg w-[35.5%] text-center border-l border-gray-500">
         Item Details
       </div>
 

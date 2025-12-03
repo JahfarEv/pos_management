@@ -1,3 +1,353 @@
+// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import type { PayloadAction } from "@reduxjs/toolkit";
+// import api from "../../utils/api";
+
+// export interface Product {
+//   id: string;
+//   _id?: string;
+//   itemName: string;
+//   price: number;
+//   stock: number;
+//   lowStock: boolean;
+//   category?: string;
+//     conversionFactor?: number; // Check if this exists
+
+// }
+
+// interface ProductsState {
+//   categories: string[];
+//   selectedCategory: string;
+//   products: Product[];
+//   filteredProducts: Product[];
+//   loading: boolean;
+//   error?: string | null;
+// }
+
+// const initialState: ProductsState = {
+//   categories: ["All"],
+//   selectedCategory: "All",
+//   products: [],
+//   filteredProducts: [],
+//   loading: false,
+//   error: null,
+// };
+
+// const extractCategories = (products: Product[]): string[] => {
+//   const categories = new Set<string>();
+
+//   products.forEach((product) => {
+//     if (product.category) {
+//       categories.add(product.category);
+//     }
+//   });
+
+//   return Array.from(categories);
+// };
+
+// // Fetch all products - UPDATED
+// export const fetchProducts = createAsyncThunk<
+//   Product[],
+//   { search?: string; category?: string } | void
+// >("products/fetchProducts", async (params, { rejectWithValue }) => {
+//   try {
+//     let url = "/products";
+
+//     if (params) {
+//       const queryParams = new URLSearchParams();
+//       if (params.search) queryParams.set("search", params.search);
+//       if (params.category && params.category !== "All") {
+//         queryParams.set("category", params.category);
+//       }
+
+//       if (queryParams.toString()) {
+//         url += `?${queryParams.toString()}`;
+//       }
+//     }
+
+//     const response = await api.request<any>(url);
+
+//     // Handle the correct response structure - response has "items" array
+//     let productsData: any[] = [];
+
+//     if (response.success && Array.isArray(response.items)) {
+//       productsData = response.items;
+//     } else if (response.success && Array.isArray(response.data)) {
+//       productsData = response.data;
+//     } else if (response.success && Array.isArray((response as any).products)) {
+//       productsData = (response as any).products;
+//     } else if (Array.isArray(response)) {
+//       productsData = response;
+//     }
+
+//     console.log("Fetched products data:", productsData); // Debug log
+
+//     // Normalize product data - use retailRate as price, itemName as itemName
+//     return productsData.map((product) => ({
+//       id: product._id || product.id || String(Date.now()),
+//       itemName: product.itemName || product.name || "Unnamed Product", // Fixed: use itemName first
+//       price: product.retailRate || product.price || 0,
+//       category: product.category || "Uncategorized",
+//       lowStock:
+//         product.lowStock !== undefined
+//           ? product.lowStock
+//           : (product.stock || 0) <= 5,
+//       stock: product.stock || 0,
+//       _id: product._id,
+//     })) as Product[];
+//   } catch (err: any) {
+//     console.error("Error fetching products:", err);
+//     return rejectWithValue(err.message || "Failed to fetch products");
+//   }
+// });
+
+// // Create new product - UPDATED
+// export const createProduct = createAsyncThunk<Product, Record<string, any>>(
+//   "products/createProduct",
+//   async (productData, { rejectWithValue }) => {
+//     try {
+//       console.log("Sending to API:", productData); // Debug log
+
+//       // createProduct — Axios-style: use `data`, don't stringify
+//       const response = await api.request<any>("/products", {
+//         method: "POST",
+//         data: productData,
+//       });
+
+//       console.log("API Response:", response); // Debug log
+
+//       const newProduct = response.data || response;
+
+//       return {
+//         id: newProduct._id || String(Date.now()),
+//         itemName:
+//           newProduct.itemName || newProduct.name || productData.itemName, // Fixed
+//         price:
+//           newProduct.retailRate ||
+//           newProduct.price ||
+//           productData.retailRate ||
+//           0,
+//         category:
+//           newProduct.category || productData.category || "Uncategorized",
+//         lowStock:
+//           newProduct.lowStock !== undefined
+//             ? newProduct.lowStock
+//             : (newProduct.stock || productData.stock || 0) <= 5,
+//         stock: newProduct.stock || productData.stock || 0,
+//         _id: newProduct._id,
+//       } as Product;
+//     } catch (err: any) {
+//       console.error("Error creating product:", err);
+//       return rejectWithValue(err.message || "Failed to create product");
+//     }
+//   }
+// );
+
+// // Update product - UPDATED
+// export const updateProduct = createAsyncThunk<
+//   Product,
+//   { id: string; payload: Record<string, any> }
+// >("products/updateProduct", async ({ id, payload }, { rejectWithValue }) => {
+//   try {
+//     const response = await api.request<any>(`/products/${id}`, {
+//       method: "PUT",
+//       data: payload,
+//     });
+
+//     const updatedProduct = response.data || response;
+
+//     return {
+//       id: updatedProduct._id || id,
+//       itemName:
+//         updatedProduct.itemName || updatedProduct.name || payload.itemName, // Fixed
+//       price:
+//         updatedProduct.retailRate ||
+//         updatedProduct.price ||
+//         payload.retailRate ||
+//         0,
+//       category: updatedProduct.category || payload.category,
+//       lowStock:
+//         updatedProduct.lowStock !== undefined
+//           ? updatedProduct.lowStock
+//           : (updatedProduct.stock || payload.stock || 0) <= 5,
+//       stock: updatedProduct.stock || payload.stock || 0,
+//       _id: updatedProduct._id,
+//     } as Product;
+//   } catch (err: any) {
+//     return rejectWithValue(err.message || "Failed to update product");
+//   }
+// });
+
+// // Delete product - UPDATED to use api utility
+// export const deleteProduct = createAsyncThunk<string, string>(
+//   "products/deleteProduct",
+//   async (id, { rejectWithValue }) => {
+//     try {
+//       const response = await api.request<any>(`/products/${id}`, {
+//         method: "DELETE",
+//       });
+
+//       console.log("Delete response:", response); // Debug log
+
+//       if (response.success) {
+//         return id;
+//       } else {
+//         throw new Error(response.message || "Failed to delete product");
+//       }
+//     } catch (err: any) {
+//       console.error("Delete error:", err);
+//       return rejectWithValue(err.message || "Failed to delete product");
+//     }
+//   }
+// );
+
+// const productsSlice = createSlice({
+//   name: "products",
+//   initialState,
+//   reducers: {
+//     setSelectedCategory: (state, action: PayloadAction<string>) => {
+//       state.selectedCategory = action.payload;
+
+//       if (action.payload === "All") {
+//         state.filteredProducts = state.products;
+//       } else {
+//         state.filteredProducts = state.products.filter(
+//           (product) => product.category === action.payload
+//         );
+//       }
+//     },
+
+//     addCategory: (state, action: PayloadAction<string>) => {
+//       const newCategory = action.payload;
+//       if (
+//         newCategory &&
+//         newCategory !== "All" &&
+//         !state.categories.includes(newCategory)
+//       ) {
+//         state.categories.push(newCategory);
+//       }
+//     },
+
+//     clearError: (state) => {
+//       state.error = null;
+//     },
+
+//     resetProducts: () => initialState,
+//   },
+
+//   extraReducers: (builder) => {
+//     // Fetch Products
+//     builder
+//       .addCase(fetchProducts.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(fetchProducts.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.products = action.payload;
+
+//         const extractedCategories = extractCategories(action.payload);
+//         state.categories = ["All", ...extractedCategories];
+
+//         if (state.selectedCategory === "All") {
+//           state.filteredProducts = action.payload;
+//         } else {
+//           state.filteredProducts = action.payload.filter(
+//             (product) => product.category === state.selectedCategory
+//           );
+//         }
+//       })
+//       .addCase(fetchProducts.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload as string;
+//       });
+
+//     // Create Product
+//     builder
+//       .addCase(createProduct.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(createProduct.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.products.push(action.payload);
+
+//         if (
+//           state.selectedCategory === "All" ||
+//           action.payload.category === state.selectedCategory
+//         ) {
+//           state.filteredProducts.push(action.payload);
+//         }
+
+//         if (
+//           action.payload.category &&
+//           !state.categories.includes(action.payload.category)
+//         ) {
+//           state.categories.push(action.payload.category);
+//         }
+//       })
+//       .addCase(createProduct.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload as string;
+//       });
+
+//     // Update Product
+//     builder
+//       .addCase(updateProduct.fulfilled, (state, action) => {
+//         const index = state.products.findIndex(
+//           (p) => p.id === action.payload.id
+//         );
+//         if (index !== -1) {
+//           state.products[index] = action.payload;
+
+//           const filteredIndex = state.filteredProducts.findIndex(
+//             (p) => p.id === action.payload.id
+//           );
+//           if (filteredIndex !== -1) {
+//             state.filteredProducts[filteredIndex] = action.payload;
+//           }
+
+//           if (
+//             action.payload.category &&
+//             !state.categories.includes(action.payload.category)
+//           ) {
+//             state.categories.push(action.payload.category);
+//           }
+//         }
+//       })
+//       .addCase(updateProduct.rejected, (state, action) => {
+//         state.error = action.payload as string;
+//       });
+
+//     // Delete Product
+//     builder
+//       .addCase(deleteProduct.fulfilled, (state, action) => {
+//         state.products = state.products.filter((p) => p.id !== action.payload);
+//         state.filteredProducts = state.filteredProducts.filter(
+//           (p) => p.id !== action.payload
+//         );
+
+//         const extractedCategories = extractCategories(state.products);
+//         state.categories = ["All", ...extractedCategories];
+//       })
+//       .addCase(deleteProduct.rejected, (state, action) => {
+//         state.error = action.payload as string;
+//       });
+//   },
+// });
+
+// export const { setSelectedCategory, addCategory, clearError, resetProducts } =
+//   productsSlice.actions;
+
+// export default productsSlice.reducer;
+
+
+
+
+
+
+
+
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import api from "../../utils/api";
@@ -10,6 +360,21 @@ export interface Product {
   stock: number;
   lowStock: boolean;
   category?: string;
+  conversionFactor?: number;
+  barcode?: string;
+  unit?: string;
+  wholesaleRate?: number;
+  purchaseRate?: number;
+  hsn?: string;
+  code?: string;
+}
+
+// Add Pagination interface matching your API response
+interface PaginationData {
+  total: number;
+  page: number;
+  pages: number;
+  limit: number;
 }
 
 interface ProductsState {
@@ -19,6 +384,7 @@ interface ProductsState {
   filteredProducts: Product[];
   loading: boolean;
   error?: string | null;
+  pagination: PaginationData | null;
 }
 
 const initialState: ProductsState = {
@@ -28,6 +394,7 @@ const initialState: ProductsState = {
   filteredProducts: [],
   loading: false,
   error: null,
+  pagination: null,
 };
 
 const extractCategories = (products: Product[]): string[] => {
@@ -42,96 +409,128 @@ const extractCategories = (products: Product[]): string[] => {
   return Array.from(categories);
 };
 
-// Fetch all products - UPDATED
+// Fetch all products with pagination
+// Update fetchProducts to handle pagination
+// Simplified approach - treat void as empty object
 export const fetchProducts = createAsyncThunk<
-  Product[],
-  { search?: string; category?: string } | void
+  { products: Product[]; pagination: PaginationData },
+  { 
+    q?: string; 
+    category?: string;
+    page?: number;
+    limit?: number;
+  } | void
 >("products/fetchProducts", async (params, { rejectWithValue }) => {
   try {
     let url = "/products";
+    const queryParams = new URLSearchParams();
 
-    if (params) {
-      const queryParams = new URLSearchParams();
-      if (params.search) queryParams.set("search", params.search);
-      if (params.category && params.category !== "All") {
-        queryParams.set("category", params.category);
-      }
+    // Create default parameters
+    const defaultParams = {
+      page: 1,
+      limit: 6,
+      q: "",
+      category: "",
+    };
 
-      if (queryParams.toString()) {
-        url += `?${queryParams.toString()}`;
-      }
+    // Merge with provided params (if any)
+    const mergedParams = {
+      ...defaultParams,
+      ...(params || {}),
+    };
+
+    // Always include pagination parameters
+    queryParams.set("page", mergedParams.page.toString());
+    queryParams.set("limit", mergedParams.limit.toString());
+
+    // Add search parameter (q) if provided and not empty
+    if (mergedParams.q && mergedParams.q.trim() !== "") {
+      queryParams.set("q", mergedParams.q.trim());
+    }
+    
+    // Add category parameter if provided and not "All"
+    if (mergedParams.category && mergedParams.category !== "All") {
+      queryParams.set("category", mergedParams.category);
     }
 
+    url += `?${queryParams.toString()}`;
+    console.log("API URL:", url);
+    
     const response = await api.request<any>(url);
 
-    // Handle the correct response structure - response has "items" array
-    let productsData: any[] = [];
-
-    if (response.success && Array.isArray(response.items)) {
-      productsData = response.items;
-    } else if (response.success && Array.isArray(response.data)) {
-      productsData = response.data;
-    } else if (response.success && Array.isArray((response as any).products)) {
-      productsData = (response as any).products;
-    } else if (Array.isArray(response)) {
-      productsData = response;
+    if (!response.success) {
+      throw new Error(response.message || "Failed to fetch products");
     }
 
-    console.log("Fetched products data:", productsData); // Debug log
+    // Extract products from the "items" array
+    const productsData = response.items || [];
+    const paginationData: PaginationData = {
+      total: response.total || 0,
+      page: response.page || mergedParams.page,
+      pages: response.pages || 1,
+      limit: response.limit || mergedParams.limit,
+    };
 
-    // Normalize product data - use retailRate as price, itemName as itemName
-    return productsData.map((product) => ({
+    console.log(`Fetched ${productsData.length} products, pagination:`, paginationData);
+
+    // Normalize product data
+    const normalizedProducts = productsData.map((product: any) => ({
       id: product._id || product.id || String(Date.now()),
-      itemName: product.itemName || product.name || "Unnamed Product", // Fixed: use itemName first
+      itemName: product.name || product.itemName || "Unnamed Product",
       price: product.retailRate || product.price || 0,
       category: product.category || "Uncategorized",
-      lowStock:
-        product.lowStock !== undefined
-          ? product.lowStock
-          : (product.stock || 0) <= 5,
+      lowStock: product.lowStock || false,
       stock: product.stock || 0,
+      conversionFactor: product.conversionFactor || 1,
       _id: product._id,
+      barcode: product.barcode,
+      unit: product.unitPrimary,
+      wholesaleRate: product.wholesaleRate,
+      purchaseRate: product.purchaseRate,
+      hsn: product.hsn,
+      code: product.code,
     })) as Product[];
+
+    return {
+      products: normalizedProducts,
+      pagination: paginationData,
+    };
   } catch (err: any) {
     console.error("Error fetching products:", err);
     return rejectWithValue(err.message || "Failed to fetch products");
   }
 });
-
-// Create new product - UPDATED
+// Create new product
 export const createProduct = createAsyncThunk<Product, Record<string, any>>(
   "products/createProduct",
   async (productData, { rejectWithValue }) => {
     try {
-      console.log("Sending to API:", productData); // Debug log
+      console.log("Creating product:", productData);
 
-      // createProduct — Axios-style: use `data`, don't stringify
       const response = await api.request<any>("/products", {
         method: "POST",
         data: productData,
       });
 
-      console.log("API Response:", response); // Debug log
+      console.log("API Response:", response);
 
       const newProduct = response.data || response;
 
       return {
         id: newProduct._id || String(Date.now()),
-        itemName:
-          newProduct.itemName || newProduct.name || productData.itemName, // Fixed
-        price:
-          newProduct.retailRate ||
-          newProduct.price ||
-          productData.retailRate ||
-          0,
-        category:
-          newProduct.category || productData.category || "Uncategorized",
-        lowStock:
-          newProduct.lowStock !== undefined
-            ? newProduct.lowStock
-            : (newProduct.stock || productData.stock || 0) <= 5,
+        itemName: newProduct.name || newProduct.itemName || productData.name || productData.itemName,
+        price: newProduct.retailRate || newProduct.price || productData.retailRate || productData.price || 0,
+        category: newProduct.category || productData.category || "Uncategorized",
+        lowStock: newProduct.lowStock || false,
         stock: newProduct.stock || productData.stock || 0,
+        conversionFactor: newProduct.conversionFactor || productData.conversionFactor || 1,
         _id: newProduct._id,
+        barcode: newProduct.barcode || productData.barcode,
+        unit: newProduct.unitPrimary || productData.unitPrimary,
+        wholesaleRate: newProduct.wholesaleRate || productData.wholesaleRate,
+        purchaseRate: newProduct.purchaseRate || productData.purchaseRate,
+        hsn: newProduct.hsn || productData.hsn,
+        code: newProduct.code || productData.code,
       } as Product;
     } catch (err: any) {
       console.error("Error creating product:", err);
@@ -140,12 +539,14 @@ export const createProduct = createAsyncThunk<Product, Record<string, any>>(
   }
 );
 
-// Update product - UPDATED
+// Update product
 export const updateProduct = createAsyncThunk<
   Product,
   { id: string; payload: Record<string, any> }
 >("products/updateProduct", async ({ id, payload }, { rejectWithValue }) => {
   try {
+    console.log("Updating product:", id, payload);
+
     const response = await api.request<any>(`/products/${id}`, {
       method: "PUT",
       data: payload,
@@ -155,36 +556,38 @@ export const updateProduct = createAsyncThunk<
 
     return {
       id: updatedProduct._id || id,
-      itemName:
-        updatedProduct.itemName || updatedProduct.name || payload.itemName, // Fixed
-      price:
-        updatedProduct.retailRate ||
-        updatedProduct.price ||
-        payload.retailRate ||
-        0,
+      itemName: updatedProduct.name || updatedProduct.itemName || payload.name || payload.itemName,
+      price: updatedProduct.retailRate || updatedProduct.price || payload.retailRate || payload.price || 0,
       category: updatedProduct.category || payload.category,
-      lowStock:
-        updatedProduct.lowStock !== undefined
-          ? updatedProduct.lowStock
-          : (updatedProduct.stock || payload.stock || 0) <= 5,
+      lowStock: updatedProduct.lowStock || false,
       stock: updatedProduct.stock || payload.stock || 0,
+      conversionFactor: updatedProduct.conversionFactor || payload.conversionFactor || 1,
       _id: updatedProduct._id,
+      barcode: updatedProduct.barcode || payload.barcode,
+      unit: updatedProduct.unitPrimary || payload.unitPrimary,
+      wholesaleRate: updatedProduct.wholesaleRate || payload.wholesaleRate,
+      purchaseRate: updatedProduct.purchaseRate || payload.purchaseRate,
+      hsn: updatedProduct.hsn || payload.hsn,
+      code: updatedProduct.code || payload.code,
     } as Product;
   } catch (err: any) {
+    console.error("Error updating product:", err);
     return rejectWithValue(err.message || "Failed to update product");
   }
 });
 
-// Delete product - UPDATED to use api utility
+// Delete product
 export const deleteProduct = createAsyncThunk<string, string>(
   "products/deleteProduct",
   async (id, { rejectWithValue }) => {
     try {
+      console.log("Deleting product:", id);
+
       const response = await api.request<any>(`/products/${id}`, {
         method: "DELETE",
       });
 
-      console.log("Delete response:", response); // Debug log
+      console.log("Delete response:", response);
 
       if (response.success) {
         return id;
@@ -230,6 +633,18 @@ const productsSlice = createSlice({
     },
 
     resetProducts: () => initialState,
+    
+    // Add pagination reducer
+    setPagination: (state, action: PayloadAction<PaginationData>) => {
+      state.pagination = action.payload;
+    },
+
+    // Reset pagination to first page
+    resetToFirstPage: (state) => {
+      if (state.pagination) {
+        state.pagination.page = 1;
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -241,22 +656,43 @@ const productsSlice = createSlice({
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
         state.loading = false;
-        state.products = action.payload;
+        state.products = action.payload.products;
+        state.pagination = action.payload.pagination;
 
-        const extractedCategories = extractCategories(action.payload);
-        state.categories = ["All", ...extractedCategories];
+        // Extract categories from the current page's products
+        const extractedCategories = extractCategories(action.payload.products);
+        
+        // Start with "All" category
+        const newCategories = ["All"];
+        
+        // Add extracted categories
+        extractedCategories.forEach(cat => {
+          if (cat && !newCategories.includes(cat)) {
+            newCategories.push(cat);
+          }
+        });
 
+        // Merge with existing categories (remove duplicates)
+        const allCategories = Array.from(new Set([...state.categories, ...newCategories]));
+        state.categories = allCategories;
+
+        // Update filtered products
         if (state.selectedCategory === "All") {
-          state.filteredProducts = action.payload;
+          state.filteredProducts = action.payload.products;
         } else {
-          state.filteredProducts = action.payload.filter(
+          state.filteredProducts = action.payload.products.filter(
             (product) => product.category === state.selectedCategory
           );
         }
+        
+        console.log("State updated - Products:", state.products.length, 
+                    "Categories:", state.categories.length,
+                    "Pagination:", state.pagination);
       })
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+        console.error("Fetch products rejected:", action.payload);
       });
 
     // Create Product
@@ -267,20 +703,29 @@ const productsSlice = createSlice({
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
-        state.products.push(action.payload);
-
+        
+        // Add the new product to the list
+        state.products.unshift(action.payload); // Add at beginning
+        
+        // Add to filtered products if category matches
         if (
           state.selectedCategory === "All" ||
           action.payload.category === state.selectedCategory
         ) {
-          state.filteredProducts.push(action.payload);
+          state.filteredProducts.unshift(action.payload);
         }
 
+        // Add new category if it doesn't exist
         if (
           action.payload.category &&
           !state.categories.includes(action.payload.category)
         ) {
           state.categories.push(action.payload.category);
+        }
+
+        // Update pagination total
+        if (state.pagination) {
+          state.pagination.total += 1;
         }
       })
       .addCase(createProduct.rejected, (state, action) => {
@@ -290,7 +735,13 @@ const productsSlice = createSlice({
 
     // Update Product
     builder
+      .addCase(updateProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(updateProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        
         const index = state.products.findIndex(
           (p) => p.id === action.payload.id
         );
@@ -304,6 +755,7 @@ const productsSlice = createSlice({
             state.filteredProducts[filteredIndex] = action.payload;
           }
 
+          // Add new category if it doesn't exist
           if (
             action.payload.category &&
             !state.categories.includes(action.payload.category)
@@ -313,27 +765,50 @@ const productsSlice = createSlice({
         }
       })
       .addCase(updateProduct.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       });
 
     // Delete Product
     builder
+      .addCase(deleteProduct.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        
+        // Remove from products
         state.products = state.products.filter((p) => p.id !== action.payload);
+        
+        // Remove from filtered products
         state.filteredProducts = state.filteredProducts.filter(
           (p) => p.id !== action.payload
         );
 
+        // Update categories
         const extractedCategories = extractCategories(state.products);
         state.categories = ["All", ...extractedCategories];
+
+        // Update pagination total
+        if (state.pagination) {
+          state.pagination.total = Math.max(0, state.pagination.total - 1);
+        }
       })
       .addCase(deleteProduct.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       });
   },
 });
 
-export const { setSelectedCategory, addCategory, clearError, resetProducts } =
-  productsSlice.actions;
+export const { 
+  setSelectedCategory, 
+  addCategory, 
+  clearError, 
+  resetProducts,
+  setPagination,
+  resetToFirstPage
+} = productsSlice.actions;
 
 export default productsSlice.reducer;

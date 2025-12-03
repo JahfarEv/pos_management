@@ -1,5 +1,5 @@
 import React from "react";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import type { Product } from "../../../../store/slices/productsSlice";
 
 interface ProductActionsProps {
@@ -11,19 +11,12 @@ interface ProductActionsProps {
 
 export const ProductActions: React.FC<ProductActionsProps> = ({
   product,
-  onViewDetails,
   onEdit,
   onDelete,
 }) => {
   return (
-    <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-10">
-      <button
-        onClick={(e) => onViewDetails(product, e)}
-        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors flex items-center gap-2"
-      >
-        <Eye size={16} />
-        View Details
-      </button>
+    <div className="absolute right-0  w-48 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-40">
+    
 
       <button
         onClick={(e) => onEdit(product, e)}

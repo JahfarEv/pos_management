@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { useAppDispatch } from "../../../../store/hooks";
-import { updateProduct, fetchProducts } from "../../../../store/slices/productsSlice";
+import useProducts from "../../../../hooks/useProducts";
 import type { Product } from "../../../../store/slices/productsSlice";
 
 interface EditProductFormProps {
@@ -21,8 +20,9 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
     stock: product.stock,
     lowStock: product.lowStock,
   });
+
   const [loading, setLoading] = useState(false);
-  const dispatch = useAppDispatch();
+  const { update, reload } = useProducts(false); 
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,15 +37,10 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
         lowStock: editFormData.stock <= 5,
       };
 
-      await dispatch(
-        updateProduct({
-          id: product.id,
-          payload: updateData,
-        })
-      ).unwrap();
+      await update(product.id, updateData);
 
-      // Auto-refresh after successful update
-      await dispatch(fetchProducts());
+      await reload();
+
       onSuccess();
     } catch (error) {
       console.error("Failed to update product:", error);

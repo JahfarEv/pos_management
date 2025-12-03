@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { ToastContainer } from "react-toastify";
 import { useModal } from "../../../hooks/useModal";
-import { useAppDispatch, useAppSelector } from "../../../store/hooks";
+import { useAppDispatch } from "../../../store/hooks";
 import {
   fetchProducts,
   type Product,
@@ -17,17 +17,17 @@ export const ItemListingModal: React.FC = () => {
     openNewMaterialModal,
   } = useModal();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state) => state.products);
+
+
+
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // Auto-refresh products when modal opens
   useEffect(() => {
     if (isItemListingModalOpen) {
       dispatch(fetchProducts());
     }
   }, [isItemListingModalOpen, dispatch]);
 
-  // Reset editing state when modal closes
   useEffect(() => {
     if (!isItemListingModalOpen) {
       setEditingProduct(null);
@@ -42,6 +42,7 @@ export const ItemListingModal: React.FC = () => {
 
   return (
     <>
+
       <ToastContainer
         position="top-right"
         autoClose={3000}

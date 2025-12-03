@@ -1,61 +1,83 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface PaginationProps {
+interface MinimalPaginationProps {
   currentPage: number;
   totalPages: number;
-  totalItems: number;
-  itemsPerPage: number;
-  startIndex: number;
   onPageChange: (page: number) => void;
+  loading?: boolean;
 }
 
-export const Pagination: React.FC<PaginationProps> = ({
+export const MinimalPagination: React.FC<MinimalPaginationProps> = ({
   currentPage,
   totalPages,
-  totalItems,
-  itemsPerPage,
-  startIndex,
   onPageChange,
+  loading = false,
 }) => {
   const handlePrevPage = () => {
-    if (currentPage > 1) {
+    if (currentPage > 1 && !loading) {
       onPageChange(currentPage - 1);
     }
   };
 
   const handleNextPage = () => {
-    if (currentPage < totalPages) {
+    if (currentPage < totalPages && !loading) {
       onPageChange(currentPage + 1);
     }
   };
 
-  const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+  if (totalPages <= 1) {
+    return null;
+  }
 
   return (
-    <div className="flex justify-between items-center pt-4 text-xs text-gray-600">
-      <span>
-        Showing {startIndex + 1}-{endIndex} of {totalItems} records
+    <div className="flex items-center justify-center space-x-2 pt-4">
+      {/* Previous button */}
+      <button
+        onClick={handlePrevPage}
+        disabled={currentPage === 1 || loading}
+        className={`
+          w-10 h-10
+          rounded-full
+          border border-gray-300
+          flex items-center justify-center
+          transition
+          ${currentPage === 1 || loading
+            ? "opacity-50 cursor-not-allowed bg-gray-100"
+            : "hover:bg-gray-100 hover:border-gray-400"
+          }
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+        `}
+        aria-label="Previous page"
+      >
+        <ChevronLeft size={20} className="text-gray-600" />
+      </button>
+
+      {/* Current page indicator */}
+      <span className="px-3 py-1 text-sm text-gray-600">
+        {currentPage} / {totalPages}
       </span>
-      <div className="flex items-center space-x-1">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft size={16} />
-        </button>
-        <span className="px-3 py-1 border border-gray-300 rounded-md">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="p-2 border border-gray-300 rounded-md hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <ChevronRight size={16} />
-        </button>
-      </div>
+
+      {/* Next button */}
+      <button
+        onClick={handleNextPage}
+        disabled={currentPage === totalPages || loading}
+        className={`
+          w-10 h-10
+          rounded-full
+          border border-gray-300
+          flex items-center justify-center
+          transition
+          ${currentPage === totalPages || loading
+            ? "opacity-50 cursor-not-allowed bg-gray-100"
+            : "hover:bg-gray-100 hover:border-gray-400"
+          }
+          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1
+        `}
+        aria-label="Next page"
+      >
+        <ChevronRight size={20} className="text-gray-600" />
+      </button>
     </div>
   );
 };

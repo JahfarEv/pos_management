@@ -15,18 +15,6 @@ export const create = async (
   }
 };
 
-export const getById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const category = await categoryService.getCategoryById(req.params.id);
-    res.json({ success: true, data: category });
-  } catch (err) {
-    next(err);
-  }
-};
 export const getProductsByCategorySlug = async (
   req: Request,
   res: Response
@@ -47,14 +35,19 @@ export const getProductsByCategorySlug = async (
       includeInactive,
     });
 
-    return res.json(result);
+    return res.json({
+      success: true,
+      ...result,
+    });
   } catch (err: any) {
     const status = err?.status || 500;
     return res.status(status).json({
+      success: false,
       message: err?.message || "Internal server error",
     });
   }
 };
+
 
 export const update = async (
   req: Request,

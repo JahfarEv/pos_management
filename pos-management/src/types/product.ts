@@ -11,6 +11,7 @@ export interface Product {
   unit?: string;
   barcode?: string;
   sku?: string;
+  q?:string;
 
 
 }

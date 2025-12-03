@@ -4,7 +4,7 @@ import type { Product } from "../../store/slices/categorySlice";
 import { addItem } from "../../store/slices/cartSlice";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { toast } from "sonner";
-import type { AuthUser } from "../../store/slices/authSlice"; // Import AuthUser type
+import type { AuthUser } from "../../store/slices/authSlice"; 
 
 interface ProductCardProps {
   product: Product;
@@ -62,7 +62,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       className="cursor-pointer
     bg-yellow-100 shadow-md border border-amber-200 rounded-xl 
     flex flex-col items-center justify-between 
-    h-40 md:h-44 lg:h-48 relative
+    h-40 md:h-44 lg:h-50 relative
     hover:shadow-lg transition-all duration-150 hover:scale-105
     disabled:opacity-50 disabled:cursor-not-allowed
     w-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2
@@ -72,7 +72,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       aria-label={`Add ${product.name} to cart`}
     >
       {/* Price badge */}
-      <div className="absolute -top-3 left-3 bg-green-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-md rotate-340">
+      <div className="absolute -top-3 left-3 bg-green-600 text-white text-sm font-bold px-3 py-1.5 rounded-lg shadow-md rotate-350">
         ${price.toFixed(2)}
       </div>
 

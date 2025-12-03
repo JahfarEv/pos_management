@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { MaterialFormData } from "../types/materialForm.types";
-import { initialMaterialFormData } from "../types/materialForm.types";
+import type { MaterialFormData } from "../types/materialTypes";
+import { initialMaterialFormData } from "../types/materialTypes";
 
 export const useMaterialForm = (initialData?: Partial<MaterialFormData>) => {
   const [formData, setFormData] = useState<MaterialFormData>({

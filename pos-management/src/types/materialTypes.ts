@@ -55,6 +55,8 @@ export interface MaterialFormFooterProps {
   setFormData: (data: MaterialFormData) => void;
   setError: (error: string | null) => void;
   setIsSubmitting: (submitting: boolean) => void;
+    createCategoryOnServer: (name: string, description?: string) => Promise<any>;
+
   onClearAll: () => void;
   onClose: () => void;
   // Make these optional temporarily
@@ -73,3 +75,30 @@ export interface MaterialFormProps {
   setError: (error: string | null) => void;
   openAddCategoryModal: () => void;
 }
+
+
+export const initialMaterialFormData: MaterialFormData = {
+  itemName: "",
+  itemHsn: "",
+  itemCode: "",
+  barcode: "",
+  purchaseRate: "",
+  retailRate: "",
+  wholesaleRate: "",
+  unitPrimary: "",
+  unitSecondary: "",
+  conversionFactor: "1",
+  discountAmount: "",
+  discountType: "",
+  warehouse: "",
+  taxPercentage: "",
+  batchEnabled: false,
+  serialNumberEnabled: false,
+  enabledOpeningStock: false,
+  openingStockQuantity: "",
+  category: "",
+  purchaseTax: "",
+  retailTax: "",
+  wholesaleTax: "",
+  itemImage: null,
+};
