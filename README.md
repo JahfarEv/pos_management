@@ -14,8 +14,7 @@ npm install
 6. 
 PORT=5000
 
-MONGO_URI=your_mongo_db_string
-JWT_SECRET=your_secret_key
+MONGO_URI=mongodb+srv://evjahfarali:47c9PnifwggjwIdO@cluster0.xw8sizj.mongodb.net/pos_system
 
 6. Run server
 7. 
