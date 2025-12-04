@@ -10,7 +10,7 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'E-commerce API Documentation',
+      title: 'POS API Documentation',
       version: '1.0.0',
       description: 'Complete API documentation for E-commerce application with user authentication, products, categories, and cart management',
       contact: {
