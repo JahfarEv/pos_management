@@ -27,7 +27,12 @@ npm install
 
 Inside src/utils/api.ts:
 
-export const API_URL = "http://localhost:5000/api";
+export const VITE_API_BASE = "https://pos-management-1.onrender.com/api";
 
 4. Start frontend
-npm run dev
+npm run dev  
+
+
+user login :{
+"mobile": "9876543200",
+  "password":"123456"
