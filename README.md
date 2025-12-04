@@ -16,6 +16,8 @@ PORT=5000
 
 MONGO_URI=mongodb+srv://evjahfarali:47c9PnifwggjwIdO@cluster0.xw8sizj.mongodb.net/pos_system
 
+jwt secret
+
 6. Run server
 7. 
 npm run dev
