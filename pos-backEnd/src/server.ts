@@ -1,5 +1,7 @@
 // src/server.ts
 import dotenv from "dotenv";
+import { setupSwagger } from './swagger';
+
 dotenv.config();
 
 import app from "./app";
@@ -11,6 +13,7 @@ async function startServer() {
   try {
     // Connect to DB
     await connectDB();
+setupSwagger(app);
 
     // Start server
     app.listen(PORT, () => {

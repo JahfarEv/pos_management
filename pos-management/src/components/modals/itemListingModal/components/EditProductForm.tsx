@@ -22,7 +22,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({
   });
 
   const [loading, setLoading] = useState(false);
-  const { update, reload } = useProducts(false); 
+  const { update, reload } = useProducts(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

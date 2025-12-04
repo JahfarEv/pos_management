@@ -6,6 +6,7 @@ import categoryRoutes from "./routes/category.routes";
 import cartRoutes from "./routes/cart.routes"
 import cors from "cors";
 
+
 const app = express();
 
 app.use(
