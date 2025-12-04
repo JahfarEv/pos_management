@@ -1,3 +1,5 @@
+
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import api from "../../utils/api";
@@ -19,6 +21,7 @@ export interface Product {
   code?: string;
 }
 
+// Add Pagination interface matching your API response
 interface PaginationData {
   total: number;
   page: number;
@@ -87,13 +90,16 @@ export const fetchProducts = createAsyncThunk<
       ...(params || {}),
     };
 
+    // Always include pagination parameters
     queryParams.set("page", mergedParams.page.toString());
     queryParams.set("limit", mergedParams.limit.toString());
 
+    // Add search parameter (q) if provided and not empty
     if (mergedParams.q && mergedParams.q.trim() !== "") {
       queryParams.set("q", mergedParams.q.trim());
     }
 
+    // Add category parameter if provided and not "All"
     if (mergedParams.category && mergedParams.category !== "All") {
       queryParams.set("category", mergedParams.category);
     }
@@ -107,6 +113,7 @@ export const fetchProducts = createAsyncThunk<
       throw new Error(response.message || "Failed to fetch products");
     }
 
+    // Extract products from the "items" array
     const productsData = response.items || [];
     const paginationData: PaginationData = {
       total: response.total || 0,

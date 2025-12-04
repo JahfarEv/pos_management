@@ -52,7 +52,6 @@ interface CategoriesState {
   error?: string | null;
   productsByCategory: Record<string, ProductsBucket>;
   categoriesPagination: PaginationData;
-  
 }
 
 // --------------------------------
@@ -419,7 +418,7 @@ const categoriesSlice = createSlice({
 
   extraReducers: (builder) => {
     // --- LOAD CATEGORIES WITH PAGINATION
-  
+
     builder
       .addCase(fetchCategories.pending, (state, action) => {
         const isLoadMore = action.meta.arg?.isLoadMore || false;
@@ -507,112 +506,70 @@ const categoriesSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // --- LOAD PRODUCTS BY CATEGORY WITH PAGINATION
-    // builder
-      // .addCase(fetchProductsByCategorySlug.pending, (state, action) => {
-      //   const slug = action.meta.arg.slug;
-      //   const existing = state.productsByCategory[slug];
-      //   state.productsByCategory[slug] = {
-      //     data: existing?.data || [],
-      //     loading: true,
-      //     error: null,
-      //     pagination: existing?.pagination || {
-      //       page: action.meta.arg.params?.page || 1,
-      //       limit: action.meta.arg.params?.limit || 8,
-      //       total: existing?.pagination?.total || 0,
-      //       pages: existing?.pagination?.pages || 1,
-      //     },
-      //   };
-      // })
-      // .addCase(fetchProductsByCategorySlug.fulfilled, (state, action) => {
-      //   const { slug, data, pagination } = action.payload;
-      //   state.productsByCategory[slug] = {
-      //     data,
-      //     loading: false,
-      //     error: null,
-      //     pagination,
-      //   };
-      // })
-      // .addCase(fetchProductsByCategorySlug.rejected, (state, action) => {
-      //   const slug = action.meta.arg.slug;
-      //   const existing = state.productsByCategory[slug];
-      //   state.productsByCategory[slug] = {
-      //     data: existing?.data || [],
-      //     loading: false,
-      //     error: action.payload as string,
-      //     pagination: existing?.pagination || {
-      //       page: 1,
-      //       limit: 8,
-      //       total: 0,
-      //       pages: 1,
-      //     },
-      //   };
-      // });
+    builder.addCase(fetchProductsByCategorySlug.pending, (state, action) => {
+      const slug = action.meta.arg.slug;
+      const page = action.meta.arg.params?.page || 1;
 
+      if (!state.productsBuckets[slug]) {
+        state.productsBuckets[slug] = {
+          data: [],
+          pagination: { page: 1, limit: 12, total: 0, pages: 1 },
+          loading: true,
+          error: null,
+        };
+      }
 
-builder.addCase(fetchProductsByCategorySlug.pending, (state, action) => {
-    const slug = action.meta.arg.slug;
-    const page = action.meta.arg.params?.page || 1;
-    
-    if (!state.productsBuckets[slug]) {
-      state.productsBuckets[slug] = {
-        data: [],
-        pagination: { page: 1, limit: 12, total: 0, pages: 1 },
-        loading: true,
-        error: null,
-      };
-    }
-    
-    if (page === 1) {
-      // First page - reset data
-      state.productsBuckets[slug].data = [];
-      state.productsBuckets[slug].loading = true;
-    }
-    // For infinite scroll, loading state is handled separately
-  });
-  
-  builder.addCase(fetchProductsByCategorySlug.fulfilled, (state, action) => {
-    const { slug, data, pagination } = action.payload;
-    const page = action.meta.arg.params?.page || 1;
-    
-    if (!state.productsBuckets[slug]) {
-      state.productsBuckets[slug] = {
-        data: [],
-        pagination,
-        loading: false,
-        error: null,
-      };
-    }
-    
-    if (page === 1) {
-      // First page - replace data
-      state.productsBuckets[slug].data = data;
-    } else {
-      // Infinite scroll - append data
-      state.productsBuckets[slug].data = [...state.productsBuckets[slug].data, ...data];
-    }
-    
-    state.productsBuckets[slug].pagination = pagination;
-    state.productsBuckets[slug].loading = false;
-    state.productsBuckets[slug].error = null;
-    
-    console.log(`✅ Products for ${slug} updated:`, {
-      page: pagination.page,
-      totalPages: pagination.pages,
-      productsCount: state.productsBuckets[slug].data.length,
-      totalProducts: pagination.total,
+      if (page === 1) {
+        // First page - reset data
+        state.productsBuckets[slug].data = [];
+        state.productsBuckets[slug].loading = true;
+      }
+      // For infinite scroll, loading state is handled separately
     });
-  });
-  
-  builder.addCase(fetchProductsByCategorySlug.rejected, (state, action) => {
-    const slug = action.meta.arg.slug;
-    if (state.productsBuckets[slug]) {
-      state.productsBuckets[slug].loading = false;
-      state.productsBuckets[slug].error = action.payload as string;
-    }
-  });
 
-      
+    builder.addCase(fetchProductsByCategorySlug.fulfilled, (state, action) => {
+      const { slug, data, pagination } = action.payload;
+      const page = action.meta.arg.params?.page || 1;
+
+      if (!state.productsBuckets[slug]) {
+        state.productsBuckets[slug] = {
+          data: [],
+          pagination,
+          loading: false,
+          error: null,
+        };
+      }
+
+      if (page === 1) {
+        // First page - replace data
+        state.productsBuckets[slug].data = data;
+      } else {
+        // Infinite scroll - append data
+        state.productsBuckets[slug].data = [
+          ...state.productsBuckets[slug].data,
+          ...data,
+        ];
+      }
+
+      state.productsBuckets[slug].pagination = pagination;
+      state.productsBuckets[slug].loading = false;
+      state.productsBuckets[slug].error = null;
+
+      console.log(`✅ Products for ${slug} updated:`, {
+        page: pagination.page,
+        totalPages: pagination.pages,
+        productsCount: state.productsBuckets[slug].data.length,
+        totalProducts: pagination.total,
+      });
+    });
+
+    builder.addCase(fetchProductsByCategorySlug.rejected, (state, action) => {
+      const slug = action.meta.arg.slug;
+      if (state.productsBuckets[slug]) {
+        state.productsBuckets[slug].loading = false;
+        state.productsBuckets[slug].error = action.payload as string;
+      }
+    });
   },
 });
 

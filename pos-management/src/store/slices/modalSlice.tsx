@@ -1,67 +1,6 @@
-// import { createSlice } from "@reduxjs/toolkit";
-
-// interface ModalState {
-//   isItemListingModalOpen: boolean;
-//   isNewMaterialModalOpen: boolean;
-//   isAddCategoryModalOpen: boolean;
-// }
-
-// const initialState: ModalState = {
-//   isItemListingModalOpen: false,
-//   isNewMaterialModalOpen: false,
-//   isAddCategoryModalOpen: false,
-// };
-
-// const modalSlice = createSlice({
-//   name: "modal",
-//   initialState,
-//   reducers: {
-//     openItemListingModal: (state) => {
-//       state.isItemListingModalOpen = true;
-//     },
-//     closeItemListingModal: (state) => {
-//       state.isItemListingModalOpen = false;
-//     },
-//     openNewMaterialModal: (state) => {
-//       state.isNewMaterialModalOpen = true;
-//     },
-//     closeNewMaterialModal: (state) => {
-//       state.isNewMaterialModalOpen = false;
-//     },
-//     openAddCategoryModal: (state) => {
-//       state.isAddCategoryModalOpen = true;
-//     },
-//     closeAddCategoryModal: (state) => {
-//       state.isAddCategoryModalOpen = false;
-//     },
-//     closeAllModals: (state) => {
-//       state.isItemListingModalOpen = false;
-//       state.isNewMaterialModalOpen = false;
-//       state.isAddCategoryModalOpen = false;
-//     },
-//   },
-// });
-
-// export const {
-//   openItemListingModal,
-//   closeItemListingModal,
-//   openNewMaterialModal,
-//   closeNewMaterialModal,
-//   openAddCategoryModal,
-//   closeAddCategoryModal,
-//   closeAllModals,
-// } = modalSlice.actions;
-
-// export default modalSlice.reducer;
-
-
-
-
-
-// store/slices/modalSlice.ts
-import { createSlice, } from '@reduxjs/toolkit';
-import type { PayloadAction} from '@reduxjs/toolkit'
-import type { Product } from './productsSlice'; // Make sure to import Product type
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { Product } from "./productsSlice"; // Make sure to import Product type
 
 interface ModalState {
   isItemListingModalOpen: boolean;
@@ -80,7 +19,7 @@ const initialState: ModalState = {
 };
 
 const modalSlice = createSlice({
-  name: 'modal',
+  name: "modal",
   initialState,
   reducers: {
     openItemListingModal: (state) => {
@@ -89,14 +28,14 @@ const modalSlice = createSlice({
     closeItemListingModal: (state) => {
       state.isItemListingModalOpen = false;
     },
-    
+
     openNewMaterialModal: (state) => {
       state.isNewMaterialModalOpen = true;
     },
     closeNewMaterialModal: (state) => {
       state.isNewMaterialModalOpen = false;
     },
-    
+
     openEditMaterialModal: (state, action: PayloadAction<Product>) => {
       state.isEditMaterialModalOpen = true;
       state.editingProduct = action.payload;
@@ -105,14 +44,14 @@ const modalSlice = createSlice({
       state.isEditMaterialModalOpen = false;
       state.editingProduct = null;
     },
-    
+
     openAddCategoryModal: (state) => {
       state.isAddCategoryModalOpen = true;
     },
     closeAddCategoryModal: (state) => {
       state.isAddCategoryModalOpen = false;
     },
-    
+
     closeAllModals: (state) => {
       state.isItemListingModalOpen = false;
       state.isNewMaterialModalOpen = false;
